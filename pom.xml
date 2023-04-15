@@ -5,7 +5,7 @@
 
 	<groupId>io.github.k_tomaszewski</groupId>
 	<artifactId>discovery</artifactId>
-	<version>0.1</version>
+	<version>0.0.0</version>			<!-- The final version is provided by jgitver-maven-plugin -->
 	<packaging>jar</packaging>
 
 	<name>Simple service discovery based on multicast in IPv6 network prepared for use with Spring Framework</name>
