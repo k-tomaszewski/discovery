@@ -21,3 +21,4 @@ jobs:
         run: mvn -B deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JGITVER_BRANCH: main
