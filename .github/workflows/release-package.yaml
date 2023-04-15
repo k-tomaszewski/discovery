@@ -14,6 +14,11 @@ jobs:
           fetch-depth: 0
       - name: 'Fetch all tags'
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: 'Convert lightweight tag to annotated tag'
+        run: |
+          LAST_TAG=$(git tag|tail -1)
+          LAST_ANNOTATED_TAG=$(git describe)
+          if [ "$LAST_TAG" != "$LAST_ANNOTATED_TAG" ]; then git tag -a -f $LAST_TAG -m "$LAST_TAG" ; else echo "NOP"; fi
       - name: 'Set up JDK and Maven'
         uses: actions/setup-java@v3
         with:
