@@ -18,19 +18,19 @@ public class JsonSerialization {
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
-    public DiscoveryRequest deserialize(ByteBuffer bytes) {
+    public <T> T deserialize(ByteBuffer bytes, Class<T> type) {
         try {
-            return objectMapper.readValue(bytes.array(), bytes.position(), bytes.limit() - bytes.position(), DiscoveryRequest.class);
+            return objectMapper.readValue(bytes.array(), bytes.position(), bytes.limit() - bytes.position(), type);
         } catch (IOException e) {
             throw new RuntimeException("Cannot deserialize DiscoveryRequest", e);
         }
     }
 
-    public ByteBuffer serialize(DiscoveryResponse response) {
+    public ByteBuffer serialize(Object response) {
         try {
             return ByteBuffer.wrap(objectMapper.writeValueAsBytes(response));
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Cannot serialize DiscoveryResponse", e);
+            throw new RuntimeException("Cannot serialize " + response.getClass().getName(), e);
         }
     }
 }

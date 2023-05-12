@@ -2,6 +2,7 @@ package io.github.k_tomaszewski.discovery.server;
 
 import io.github.k_tomaszewski.discovery.EndpointInfoUtils;
 import io.github.k_tomaszewski.discovery.JsonSerialization;
+import io.github.k_tomaszewski.discovery.model.DiscoveryRequest;
 import io.github.k_tomaszewski.discovery.model.DiscoveryResponse;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -87,7 +88,7 @@ public class DiscoveryServerBean implements InitializingBean, DisposableBean {
 	}
 
 	private ByteBuffer processRequestPacket(SocketAddress srcSocketAddr, ByteBuffer requestPacket) {
-		var request = packageFormat.deserialize(requestPacket);
+		var request = packageFormat.deserialize(requestPacket, DiscoveryRequest.class);
 		var response = new DiscoveryResponse(request.getCid(), appName, ports, hostname);
 		return packageFormat.serialize(response);
 	}

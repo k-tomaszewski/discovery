@@ -4,7 +4,6 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -19,8 +18,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
+import static io.github.k_tomaszewski.discovery.IoUtils.closeSafely;
+
 /**
  * To stop the thread invoke interrupt() method.
+ * TODO: add optional (configuration controlled) cyclic refreshing of available interfaces and joining.
  */
 class DefaultServerThread extends Thread {
 
@@ -47,7 +49,7 @@ class DefaultServerThread extends Thread {
 				}
 			} while (channel.isOpen());
 		} finally {
-			closeSafely(channel);
+			closeSafely(channel, LOG);
 			LOG.info("Ended.");
 		}
 	}
@@ -104,7 +106,7 @@ class DefaultServerThread extends Thread {
 
 			return channel;
 		} catch (Exception e) {
-			closeSafely(channel);
+			closeSafely(channel, LOG);
 			throw new RuntimeException("Cannot open datagram channel", e);
 		}
 	}
@@ -117,16 +119,6 @@ class DefaultServerThread extends Thread {
 		} catch (IOException e) {
 			LOG.warn("Cannot join multicast group {} on interface {}", group, ni.getName(), e);
 			return null;
-		}
-	}
-
-	private static void closeSafely(Closeable obj) {
-		if (obj != null) {
-			try {
-				obj.close();
-			} catch (IOException e) {
-				LOG.warn("Error occurred when closing {}: {}", obj.getClass().getName(), e.getMessage());
-			}
 		}
 	}
 }
