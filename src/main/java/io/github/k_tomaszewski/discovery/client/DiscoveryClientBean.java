@@ -99,9 +99,10 @@ public class DiscoveryClientBean implements DisposableBean {
                     LOG.debug("Service discovery with cid = {} was cancelled.", correlationId);
                     return;
                 }
-                LOG.debug("Waiting for responses for service discovery with cid = {}...", correlationId);
+                LOG.debug("Waiting for responses for service discovery with cid = {} for {} ms...", correlationId, leftDurationMillis);
                 if (selector.select(leftDurationMillis) > 0) {
                     receiveResponse(correlationId, discoveredServices);
+                    selector.selectedKeys().clear();
                 }
                 leftDurationMillis = totalDurationMillis - (System.currentTimeMillis() - startTimeMillis);
             }
