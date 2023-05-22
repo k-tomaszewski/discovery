@@ -16,6 +16,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.MembershipKey;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
 import static io.github.k_tomaszewski.discovery.IoUtils.closeSafely;
@@ -27,12 +28,14 @@ import static io.github.k_tomaszewski.discovery.IoUtils.closeSafely;
 class DefaultServerThread extends Thread {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultServerThread.class);
+	private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
 	private final DatagramChannel channel;
 	private final ByteBuffer buffer;
 	private final BiFunction<SocketAddress, ByteBuffer, ByteBuffer> packetProcessor;
 
 	public DefaultServerThread(DiscoveryServerParams params, BiFunction<SocketAddress, ByteBuffer, ByteBuffer> packetProcessor) {
+		super("discovery-server-" + COUNTER.incrementAndGet());
 		channel = openChannel(params);
 		buffer = ByteBuffer.allocate(params.getMaxPacketBytes());
 		this.packetProcessor = packetProcessor;

@@ -30,7 +30,8 @@ import java.util.function.UnaryOperator;
 import static io.github.k_tomaszewski.discovery.IoUtils.closeSafely;
 
 /**
- * Service discovery client bean.
+ * Service discovery client bean. Consider using {@link DiscoveryClientFactoryBean} class to construct DiscoveryClientBean
+ * using some defaults.
  */
 public class DiscoveryClientBean implements DisposableBean {
 
